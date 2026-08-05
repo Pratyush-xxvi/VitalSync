@@ -17,13 +17,11 @@ services:
         sync: false
 
   # React Frontend Service (Free Render Static Site)
-  - type: web
+  - type: static
     name: vitalsync-frontend
-    runtime: static
     rootDir: frontend-app/Acumed-main_W/Acumed-main/Acumed-main/frontend
     buildCommand: npm run build
     staticPublishPath: dist
-    plan: free
     routes:
       - type: rewrite
         source: /*
