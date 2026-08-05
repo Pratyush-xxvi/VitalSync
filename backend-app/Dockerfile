@@ -2,17 +2,14 @@
 FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 
-# Copy maven wrapper and pom.xml first for layer caching
+# Copy source files
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
-
-# Download dependencies
-RUN ./mvnw dependency:go-offline -B
-
-# Copy source code and build final executable JAR
 COPY src src
-RUN ./mvnw package -DskipTests
+
+# Make mvnw executable and build the executable JAR
+RUN chmod +x mvnw && ./mvnw package -DskipTests
 
 # Stage 2: Runtime stage using lightweight JRE 17
 FROM eclipse-temurin:17-jre-alpine

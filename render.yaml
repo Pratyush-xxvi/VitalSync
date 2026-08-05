@@ -23,6 +23,9 @@ services:
     rootDir: frontend-app/Acumed-main_W/Acumed-main/Acumed-main/frontend
     buildCommand: npm run build
     staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://vitalsync-backend.onrender.com
     routes:
       - type: rewrite
         source: /*
