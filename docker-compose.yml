@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: vitalsync-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Pj26@123
+      MYSQL_DATABASE: vitalsync_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  vitalsync-backend:
+    build:
+      context: ./backend (1)/backend
+      dockerfile: Dockerfile
+    container_name: vitalsync-backend
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/vitalsync_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Pj26@123
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+
+  vitalsync-frontend:
+    build:
+      context: "./Acumed-main_W_(2)[1]/Acumed-main_W/Acumed-main/Acumed-main/frontend"
+      dockerfile: Dockerfile
+    container_name: vitalsync-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - vitalsync-backend
+
+volumes:
+  mysql_data:

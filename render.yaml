@@ -1,0 +1,30 @@
+services:
+  # Spring Boot Backend Service (Free Render Container)
+  - type: web
+    name: vitalsync-backend
+    runtime: docker
+    rootDir: backend (1)/backend
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8081
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+
+  # React Frontend Service (Free Render Static Site)
+  - type: web
+    name: vitalsync-frontend
+    runtime: static
+    rootDir: Acumed-main_W_(2)[1]/Acumed-main_W/Acumed-main/Acumed-main/frontend
+    buildCommand: npm run build
+    staticPublishPath: dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -13,7 +13,8 @@ const AdminDashboard = () => {
     const [newDate, setNewDate] = useState('');
     const [newTime, setNewTime] = useState('');
 
-    const API_URL = 'http://localhost:8081/api/admin';
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+    const API_URL = `${API_BASE_URL}/api/admin`;
 
     const authHeader = () => ({
         headers: {

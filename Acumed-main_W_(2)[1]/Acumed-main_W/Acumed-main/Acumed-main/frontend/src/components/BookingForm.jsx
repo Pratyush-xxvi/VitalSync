@@ -13,6 +13,7 @@ export default function BookingForm({ onClose, docInfo, selectedDate, selectedTi
   // States for loading and errors
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
 
   // Format the date for display
   const formattedDate = new Date(selectedDate).toLocaleDateString('en-US', {
@@ -45,8 +46,7 @@ export default function BookingForm({ onClose, docInfo, selectedDate, selectedTi
     };
 
     try {
-      // THE FIX: Changed port from 8080 to 8081
-      const response = await axios.post('http://localhost:8081/api/appointments/book', bookingData);
+      const response = await axios.post(`${API_BASE_URL}/api/appointments/book`, bookingData);
       
       console.log('Booking successful:', response.data);
       alert('Appointment booked successfully!');
