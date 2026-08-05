@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext.jsx'; // Make sure this path is correct
+import { AppContext } from '../context/AppContext.jsx';
+import { assets } from '../assets/assets';
 
 function Login() {
   const navigate = useNavigate();
-  // We need both setToken and setUser from context
   const { setToken, setUser } = useContext(AppContext);
 
   const [state, setState] = useState('Login');
@@ -15,7 +15,6 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // --- THIS IS YOUR NEW BACKEND URL ---
   const url = "http://localhost:8081/api/auth";
 
   const onSubmitHandler = async (event) => {
@@ -34,32 +33,20 @@ function Login() {
       const response = await axios.post(url + endpoint, data);
 
       if (endpoint === '/signup') {
-        // --- SIGN UP SUCCESS ---
-        setError('Account created! Please log in.');
+        setError('Account created successfully! Please log in.');
         setState('Login');
       } else {
-        // --- LOGIN SUCCESS ---
-        // 1. Get token and user data from response
         const { token, ...userData } = response.data;
-
-        // 2. Set token in context and localStorage
         setToken(token);
         localStorage.setItem("token", token);
-        
-        // 3. Set user object in context and localStorage
-        // This is the step that was failing before
         setUser(userData); 
         localStorage.setItem("user", JSON.stringify(userData));
-
-        // 4. Go to homepage
         navigate("/");
       }
 
     } catch (err) {
-      // --- ERROR HANDLING ---
       let errorMsg = 'An error occurred. Please try again.';
       if (err.response && err.response.data) {
-        // Get error from backend (e.g., "Email is already in use!")
         errorMsg = typeof err.response.data === 'string' ? err.response.data : err.response.data.message;
       }
       setError(errorMsg);
@@ -68,85 +55,108 @@ function Login() {
   };
 
   return (
-    <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center'>
-      <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[-340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg bg-white'>
+    <div className='min-h-[85vh] flex items-center justify-center py-12 px-4'>
+      <div className="w-full max-w-md bg-white rounded-3xl p-8 sm:p-10 border border-slate-100 shadow-2xl shadow-blue-500/10 flex flex-col gap-6">
         
-        <p className='text-2xl font-semibold text-gray-800'>
-          {state}
-        </p>
+        {/* Header Logo */}
+        <div className="flex flex-col items-center gap-2 text-center">
+          <img 
+            onClick={() => navigate('/')} 
+            src={assets.logo} 
+            alt="VitalSync Logo" 
+            className="h-10 cursor-pointer mb-2"
+          />
+          <h1 className='text-2xl font-extrabold text-slate-900 tracking-tight'>
+            {state === 'Sign up' ? 'Create Your VitalSync Account' : 'Welcome Back to VitalSync'}
+          </h1>
+          <p className="text-slate-500 text-xs sm:text-sm">
+            {state === 'Sign up' ? "Join VitalSync to book instant appointments with doctors." : "Sign in to access your consultations and health record."}
+          </p>
+        </div>
 
-        <p>
-          {state === 'Sign up' ? "Create an account to get started." : "Please log in to book an appointment."}
-        </p>
+        {/* Form Container */}
+        <form onSubmit={onSubmitHandler} className='flex flex-col gap-4'>
+          {state === 'Sign up' && (
+            <div className='flex flex-col gap-1.5'>
+              <label className='text-xs font-bold uppercase tracking-wider text-slate-600'>Full Name</label>
+              <input 
+                className='w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 rounded-xl px-4 py-3 text-sm font-semibold transition-all outline-none'
+                type='text'
+                placeholder='e.g. Sarah Jenkins'
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                required
+              />
+            </div>
+          )}
 
-        {state === 'Sign up' && (
-          <div className='w-full'>
-            <p>Full Name</p>
+          <div className='flex flex-col gap-1.5'>
+            <label className='text-xs font-bold uppercase tracking-wider text-slate-600'>Email Address</label>
             <input 
-              className='border border-zinc-300 rounded w-full p-2 mt-1'
-              type='text'
-              onChange={(e)=> setName(e.target.value)}
-              value={name}
+              className='w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 rounded-xl px-4 py-3 text-sm font-semibold transition-all outline-none' 
+              type='email' 
+              placeholder='you@example.com'
+              onChange={(e) => setEmail(e.target.value)} 
+              value={email}
               required
             />
           </div>
-        )}
 
-        <div className='w-full'>
-          <p>Email</p>
-          <input 
-            className='border border-zinc-300 rounded w-full p-2 mt-1' 
-            type='email' 
-            onChange={(e)=> setEmail(e.target.value)} 
-            value={email}
-            required
-          />
+          <div className='flex flex-col gap-1.5'>
+            <label className='text-xs font-bold uppercase tracking-wider text-slate-600'>Password</label>
+            <input 
+              className='w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 rounded-xl px-4 py-3 text-sm font-semibold transition-all outline-none' 
+              type='password' 
+              placeholder='••••••••'
+              onChange={(e) => setPassword(e.target.value)} 
+              value={password}
+              required
+            />
+          </div>
+
+          {error && (
+            <div className={`p-3 rounded-xl text-xs font-semibold text-center ${error.includes('created') ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-rose-50 text-rose-600 border border-rose-200'}`}>
+              {error}
+            </div>
+          )}
+
+          <button 
+            type='submit' 
+            className={`w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold py-3.5 rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
+          >
+            {loading ? 'Processing...' : (state === 'Sign up' ? "Create Account" : "Sign In")}
+          </button>
+        </form>
+
+        {/* Footer Toggle */}
+        <div className="text-center text-xs font-semibold text-slate-500 pt-2 border-t border-slate-100">
+          {state === "Sign up" ? (
+            <p>
+              Already have an account?{" "}
+              <button 
+                type="button"
+                onClick={() => { setState('Login'); setError(''); }} 
+                className='text-blue-600 hover:underline font-bold ml-1'
+              >
+                Sign In
+              </button>
+            </p>
+          ) : (
+            <p>
+              Don't have an account?{" "}
+              <button 
+                type="button"
+                onClick={() => { setState('Sign up'); setError(''); }} 
+                className='text-blue-600 hover:underline font-bold ml-1'
+              >
+                Create Account
+              </button>
+            </p>
+          )}
         </div>
-
-        <div className='w-full'>
-          <p>Password</p>
-          <input 
-            className='border border-zinc-300 rounded w-full p-2 mt-1' 
-            type='password' 
-            onChange={(e)=> setPassword(e.target.value)} 
-            value={password}
-            required
-          />
-        </div>
-
-        {error && <p className="text-red-500 text-sm w-full text-center">{error}</p>}
-
-        <button 
-          type='submit' 
-          className={`bg-blue-600 text-white w-full py-2 rounded-md text-base mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
-          disabled={loading}
-        >
-          {loading ? 'Processing...' : (state === 'Sign up' ? "Create Account" : "Login")}
-        </button>
-
-        {state === "Sign up" ? (
-          <p>
-            Already have an account?{" "}
-            <span 
-              onClick={() => { setState('Login'); setError(''); }} 
-              className='text-blue-500 underline cursor-pointer'
-            >
-              Login here
-            </span>
-          </p>
-        ) : (
-          <p>
-            Create a new account?{" "}
-            <span 
-              onClick={() => { setState('Sign up'); setError(''); }} 
-              className='text-blue-500 underline cursor-pointer'
-            >
-              Click here
-            </span>
-          </p>
-        )}
       </div>
-    </form>
+    </div>
   )
 }
 
