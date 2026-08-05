@@ -25,7 +25,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://vitalsync-backend.onrender.com
+        value: https://vitalsync-backend-dwat.onrender.com
     routes:
       - type: rewrite
         source: /*
