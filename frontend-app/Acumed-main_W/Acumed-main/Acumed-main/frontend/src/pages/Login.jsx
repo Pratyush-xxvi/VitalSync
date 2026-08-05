@@ -45,9 +45,18 @@ function Login() {
       }
 
     } catch (err) {
-      let errorMsg = 'An error occurred. Please try again.';
+      console.error("Auth error:", err);
+      let errorMsg = 'Invalid email or password. Please try again.';
       if (err.response && err.response.data) {
-        errorMsg = typeof err.response.data === 'string' ? err.response.data : err.response.data.message;
+        if (typeof err.response.data === 'string') {
+          errorMsg = err.response.data;
+        } else if (err.response.data.message) {
+          errorMsg = err.response.data.message;
+        } else if (err.response.data.error) {
+          errorMsg = err.response.data.error;
+        }
+      } else if (err.request) {
+        errorMsg = 'Server is waking up... Please wait 5 seconds and click Sign In again.';
       }
       setError(errorMsg);
     }
