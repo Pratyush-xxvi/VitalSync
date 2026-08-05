@@ -19,7 +19,7 @@ services:
 
   vitalsync-backend:
     build:
-      context: ./backend (1)/backend
+      context: ./backend-app
       dockerfile: Dockerfile
     container_name: vitalsync-backend
     restart: always
@@ -35,7 +35,7 @@ services:
 
   vitalsync-frontend:
     build:
-      context: "./Acumed-main_W_(2)[1]/Acumed-main_W/Acumed-main/Acumed-main/frontend"
+      context: "./frontend-app/Acumed-main_W/Acumed-main/Acumed-main/frontend"
       dockerfile: Dockerfile
     container_name: vitalsync-frontend
     restart: always

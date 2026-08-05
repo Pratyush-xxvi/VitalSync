@@ -3,7 +3,7 @@ services:
   - type: web
     name: vitalsync-backend
     runtime: docker
-    rootDir: backend (1)/backend
+    rootDir: backend-app
     plan: free
     region: oregon
     envVars:
@@ -20,7 +20,7 @@ services:
   - type: web
     name: vitalsync-frontend
     runtime: static
-    rootDir: Acumed-main_W_(2)[1]/Acumed-main_W/Acumed-main/Acumed-main/frontend
+    rootDir: frontend-app/Acumed-main_W/Acumed-main/Acumed-main/frontend
     buildCommand: npm run build
     staticPublishPath: dist
     plan: free
