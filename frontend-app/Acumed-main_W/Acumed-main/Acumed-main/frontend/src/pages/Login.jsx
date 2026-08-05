@@ -14,7 +14,7 @@ function Login() {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://vitalsync-backend-dwat.onrender.com';
   const url = `${API_BASE_URL}/api/auth`;
 
   const onSubmitHandler = async (event) => {

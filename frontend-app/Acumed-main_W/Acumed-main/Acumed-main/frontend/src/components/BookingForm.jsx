@@ -13,7 +13,7 @@ export default function BookingForm({ onClose, docInfo, selectedDate, selectedTi
   // States for loading and errors
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://vitalsync-backend-dwat.onrender.com';
 
   // Format the date for display
   const formattedDate = new Date(selectedDate).toLocaleDateString('en-US', {
