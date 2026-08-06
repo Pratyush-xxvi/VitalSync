@@ -2,7 +2,9 @@ package com.prescripto.backend.controller;
 
 import com.prescripto.backend.model.Appointment;
 import com.prescripto.backend.repository.AppointmentRepository;
-import com.prescripto.backend.service.EmailService; // NEW: Import EmailService
+import com.prescripto.backend.service.EmailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/appointments")
 @CrossOrigin(origins = "http://localhost:5173") 
 public class AppointmentController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AppointmentController.class);
 
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -21,19 +25,22 @@ public class AppointmentController {
 
     @PostMapping("/book")
     public ResponseEntity<?> bookAppointment(@RequestBody Appointment appointment) {
+        logger.info("BOOKING: Received booking request for patient: {}, email: {}", appointment.getPatientName(), appointment.getPatientEmail());
         
         // Save the appointment to the database
         Appointment savedAppointment = appointmentRepository.save(appointment);
+        logger.info("BOOKING: Appointment saved with ID: {}", savedAppointment.getId());
         
-        // --- NEW: Send Emails ---
+        // --- Send Emails ---
         try {
             // Email 1: To the patient
+            logger.info("BOOKING: Sending confirmation email to patient: {}", savedAppointment.getPatientEmail());
             String patientSubject = "Your Appointment is Pending";
             String patientBody = "Hello " + savedAppointment.getPatientName() + ",\n\n"
                     + "Your appointment with " + savedAppointment.getDoctorName() + " on "
                     + savedAppointment.getAppointmentDate() + " at " + savedAppointment.getAppointmentTime()
                     + " has been booked and is now PENDING approval.\n\n"
-                    + "Thank you for using Prescripto!";
+                    + "Thank you for using VitalSync!";
             emailService.sendEmail(savedAppointment.getPatientEmail(), patientSubject, patientBody);
 
             // Email 2: To the Admin
@@ -47,8 +54,7 @@ public class AppointmentController {
             emailService.sendEmail("admin@app.com", adminSubject, adminBody); // Use your admin email
 
         } catch (Exception e) {
-            // Log the email error but don't fail the API call
-            System.out.println("Error sending appointment emails: " + e.getMessage());
+            logger.error("BOOKING: Error triggering email send: {}", e.getMessage(), e);
         }
         // -------------------------
 
