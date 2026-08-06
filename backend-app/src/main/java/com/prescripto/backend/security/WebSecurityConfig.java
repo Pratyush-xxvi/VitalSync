@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()           // Allow login/signup
+                                .requestMatchers("/api/health").permitAll()          // Allow health check ping
                                 .requestMatchers("/api/appointments/**").permitAll() // Allow booking (for now)
 
                                 // --- THIS IS THE NEW LINE ---
