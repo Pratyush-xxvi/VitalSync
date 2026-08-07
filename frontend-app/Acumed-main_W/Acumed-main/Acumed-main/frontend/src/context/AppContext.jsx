@@ -19,12 +19,12 @@ const doctors = [
   },
   {
     "_id": "2",
-    "name": "Dr. R. Harshini",
+    "name": "Dr. Harshini R",
     "speciality": "General physician",
     "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Harshini",
     "experience": "8+ years",
     "degree": "MBBS",
-    "about": "Dr. R. Harshini is a dedicated general physician with a passion for holistic health and patient education.",
+    "about": "Dr. Harshini R is a dedicated general physician with a passion for holistic health and patient education.",
     "fees": 500,
     "address": {
       "line1": "Sector 62, City Center",
