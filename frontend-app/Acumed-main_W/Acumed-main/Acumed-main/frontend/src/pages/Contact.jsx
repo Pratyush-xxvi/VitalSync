@@ -26,7 +26,7 @@ function Contact() {
             </h3>
             <p className='text-slate-600 font-medium'>54789 Phase 5 Mohali, Punjab, India</p>
             <div className='mt-2 pt-2 border-t border-slate-200/60 flex flex-col gap-1 text-slate-700 font-semibold'>
-              <p>Tel: +1 (415) 555-0132</p>
+              <p>Tel: +91 98765 43210</p>
               <p>Email: contact@vitalsync.com</p>
             </div>
           </div>

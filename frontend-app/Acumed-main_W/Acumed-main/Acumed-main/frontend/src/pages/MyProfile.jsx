@@ -6,10 +6,10 @@ function MyProfile() {
     name: "Edward Vincent",
     image: assets.profile_pic,
     email: 'edward@gmail.com',
-    phone: '+1 (555) 019-2834',
+    phone: '+91 98765 43210',
     address: {
-      line1: "54th Medical Parkway, Suite 200",
-      line2: "New York, NY 10001"
+      line1: "Sector 62, Healthcare Complex",
+      line2: "Phase 5, Mohali, Punjab, India"
     },
     gender: 'Male',
     dob: '1998-05-15'

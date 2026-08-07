@@ -7,15 +7,15 @@ function Doctors() {
   const { speciality } = useParams();
   const [filterDoct, setFilterDoct] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  const { doctors } = useContext(AppContext);
+  const { doctors, currencySymbol } = useContext(AppContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (speciality) {
       const cleanSpeciality = decodeURIComponent(speciality).toLowerCase().trim();
       const filtered = doctors.filter((doc) => {
-        const docSpeciality = doc.speciality?.toLowerCase().trim();
-        return docSpeciality === cleanSpeciality;
+        const docSpec = doc.speciality ? doc.speciality.toLowerCase().trim() : "";
+        return docSpec === cleanSpeciality;
       });
       setFilterDoct(filtered);
     } else {
@@ -24,56 +24,53 @@ function Doctors() {
   }, [doctors, speciality]);
 
   return (
-    <div className="py-8 max-w-7xl mx-auto">
-      {/* Header Banner */}
-      <div className="mb-8 flex flex-col gap-2">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Find Healthcare Specialists
-        </h1>
-        <p className="text-slate-500 text-sm">
-          Browse through certified medical professionals and choose the right specialist for your health needs.
-        </p>
+    <div className="py-6 max-w-7xl mx-auto">
+      {/* Page Title Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-slate-100 gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Browse Medical Specialists
+          </h1>
+          <p className="text-slate-500 text-sm mt-1 font-medium">
+            Filter by medical field to find top-rated doctors for your health concerns.
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-col lg:flex-row items-start gap-8">
         
-        {/* Mobile Filter Toggle Button */}
-        <button
-          className="lg:hidden w-full py-2.5 px-4 bg-white border border-slate-200 rounded-xl text-slate-700 font-semibold text-sm flex items-center justify-between shadow-xs"
-          onClick={() => setShowFilter((prev) => !prev)}
-        >
-          <span className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-            Specialty Filters
-          </span>
-          <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold">
-            {speciality ? decodeURIComponent(speciality) : 'All'}
-          </span>
-        </button>
+        {/* SPECIALTY FILTER SIDEBAR */}
+        <div className="w-full lg:w-64 flex flex-col gap-3">
+          <div className="flex items-center justify-between lg:hidden mb-2">
+            <span className="font-bold text-slate-900 text-sm">Filter Category</span>
+            <button 
+              onClick={() => setShowFilter(prev => !prev)}
+              className="px-3 py-1.5 bg-blue-50 text-blue-600 text-xs font-bold rounded-lg border border-blue-100 flex items-center gap-1.5"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+              {showFilter ? "Hide Filters" : "Show Filters"}
+            </button>
+          </div>
 
-        {/* Sidebar Specialty Filter */}
-        <div className={`w-full lg:w-64 flex-col gap-2 ${showFilter ? "flex" : "hidden lg:flex"}`}>
-          <div className="p-2 bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-1">
-            <p className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-              Filter By Specialty
-            </p>
+          <div className={`w-full lg:w-64 flex-col gap-2 ${showFilter ? "flex" : "hidden lg:flex"}`}>
             
+            {/* ALL DOCTORS BUTTON */}
             <button
               onClick={() => navigate("/doctors")}
               className={`w-full text-left px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 flex items-center justify-between ${
-                !speciality 
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20" 
-                  : "text-slate-700 hover:bg-slate-50"
+                !speciality
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                  : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-100"
               }`}
             >
-              <span>All Doctors</span>
+              <span>All Specialties</span>
               <span className={`text-xs px-2 py-0.5 rounded-full ${!speciality ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`}>
                 {doctors.length}
               </span>
             </button>
 
             {specialityData.map((item, index) => {
-              const isActive = speciality && decodeURIComponent(speciality).toLowerCase().trim() === item.speciality.toLowerCase().trim();
+              const isActive = speciality && speciality.toLowerCase().trim() === item.speciality.toLowerCase().trim();
               const docCount = doctors.filter(d => d.speciality?.toLowerCase().trim() === item.speciality.toLowerCase().trim()).length;
 
               return (
@@ -81,9 +78,9 @@ function Doctors() {
                   key={index}
                   onClick={() => navigate(`/doctors/${encodeURIComponent(item.speciality)}`)}
                   className={`w-full text-left px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 flex items-center justify-between ${
-                    isActive 
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20" 
-                      : "text-slate-700 hover:bg-slate-50"
+                    isActive
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                      : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-100"
                   }`}
                 >
                   <span className="truncate">{item.speciality}</span>
@@ -96,17 +93,17 @@ function Doctors() {
           </div>
         </div>
 
-        {/* Doctors Grid */}
-        <div className="flex-1 w-full">
+        {/* DOCTORS GRID DISPLAY */}
+        <div className="w-full flex-1">
           {filterDoct.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filterDoct.map((item) => (
+              {filterDoct.map((item, index) => (
                 <div
+                  key={index}
                   onClick={() => navigate(`/appointment/${item._id}`)}
-                  key={item._id}
-                  className="group bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-xs hover:shadow-2xl hover:border-blue-200 hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                  className="group bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-xs hover:shadow-xl hover:border-blue-200 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between"
                 >
-                  <div className="bg-gradient-to-b from-blue-50/80 to-slate-50 relative overflow-hidden pt-4 px-4 flex items-center justify-center">
+                  <div className="bg-slate-50 relative overflow-hidden pt-4 px-4 flex items-center justify-center">
                     <span className="absolute top-3 left-3 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 backdrop-blur-xs z-10">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                       Available
@@ -125,7 +122,7 @@ function Doctors() {
                       </span>
                       {item.fees && (
                         <span className="text-xs font-semibold text-slate-500">
-                          ${item.fees}
+                          {currencySymbol}{item.fees}
                         </span>
                       )}
                     </div>

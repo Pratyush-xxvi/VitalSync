@@ -1,133 +1,175 @@
 import React, { createContext, useEffect, useState } from "react";
 // import { doctors } from "../assets/assets"; // This line causes an error, so we use mock data below
 
-// A new, larger mock data list that includes all your specialties
+// Updated doctors list with requested doctor names, specialties, Mohali addresses, and Rupee fees
 const doctors = [
-  // General Physicians
   {
     "_id": "1",
-    "name": "Dr. Sarah Johnson",
+    "name": "Dr. Pratyush Prakash",
     "speciality": "General physician",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Johnson",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Pratyush",
     "experience": "12+ years",
     "degree": "MD",
-    "about": "Dr. Johnson provides comprehensive primary care for adults and families, focusing on preventive medicine and managing chronic conditions.",
-    "fees": 110
+    "about": "Dr. Pratyush Prakash provides comprehensive primary care for adults and families, focusing on preventive medicine and managing chronic conditions.",
+    "fees": 500,
+    "address": {
+      "line1": "Phase 5, Sector 59",
+      "line2": "Mohali, Punjab, India"
+    }
   },
   {
     "_id": "2",
-    "name": "Dr. Michael Lee",
+    "name": "Dr. R. Harshini",
     "speciality": "General physician",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Lee",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Harshini",
     "experience": "8+ years",
-    "degree": "MD",
-    "about": "Dr. Lee is a dedicated general physician with a passion for holistic health and patient education. He is known for his thorough and compassionate approach.",
-    "fees": 100
+    "degree": "MBBS",
+    "about": "Dr. R. Harshini is a dedicated general physician with a passion for holistic health and patient education.",
+    "fees": 500,
+    "address": {
+      "line1": "Sector 62, City Center",
+      "line2": "Mohali, Punjab, India"
+    }
   },
-  // Gynecologists
   {
     "_id": "3",
-    "name": "Dr. Emily Chen",
+    "name": "Dr. Sreeja P",
     "speciality": "Gynecologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Chen",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Sreeja",
     "experience": "15+ years",
     "degree": "MD, FACOG",
-    "about": "Dr. Chen is a board-certified gynecologist specializing in women's health, from adolescence through menopause. She offers a full range of gynecological services.",
-    "fees": 160
+    "about": "Dr. Sreeja P is a board-certified gynecologist specializing in women's health, prenatal care, and reproductive health.",
+    "fees": 700,
+    "address": {
+      "line1": "Phase 7, Healthcare Hub",
+      "line2": "Mohali, Punjab, India"
+    }
   },
   {
     "_id": "4",
-    "name": "Dr. Maria Rodriguez",
+    "name": "Dr. Mishika Goyal",
     "speciality": "Gynecologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Rodriguez",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Mishika",
     "experience": "10+ years",
-    "degree": "MD",
-    "about": "Dr. Rodriguez is committed to providing personalized and compassionate care for women's reproductive health, including prenatal care and minimally invasive surgery.",
-    "fees": 150
+    "degree": "MS",
+    "about": "Dr. Mishika Goyal is committed to providing personalized and compassionate care for women's reproductive wellness.",
+    "fees": 700,
+    "address": {
+      "line1": "Sector 70, Medical Park",
+      "line2": "Mohali, Punjab, India"
+    }
   },
-  // Dermatologists
   {
     "_id": "5",
-    "name": "Dr. Robert Brown",
+    "name": "Dr. Suraj",
     "speciality": "Dermatologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Brown",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Suraj",
     "experience": "12+ years",
     "degree": "MD",
-    "about": "Dr. Robert Brown is a board-certified dermatologist with extensive experience in both medical and cosmetic dermatology. He helps patients achieve healthy, beautiful skin.",
-    "fees": 120
+    "about": "Dr. Suraj is a renowned dermatologist with extensive experience in clinical skin treatment, anti-aging, and aesthetic skin care.",
+    "fees": 600,
+    "address": {
+      "line1": "Phase 3B2, Main Market",
+      "line2": "Mohali, Punjab, India"
+    }
   },
   {
     "_id": "6",
-    "name": "Dr. Linda Kim",
+    "name": "Dr. Krishna",
     "speciality": "Dermatologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Kim",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Krishna",
     "experience": "9+ years",
     "degree": "MD, FAAD",
-    "about": "Dr. Kim specializes in pediatric dermatology and complex skin conditions. She is known for her meticulous approach and excellent patient outcomes.",
-    "fees": 130
+    "about": "Dr. Krishna specializes in dermatological surgery, complex skin condition management, and pediatric skin care.",
+    "fees": 600,
+    "address": {
+      "line1": "Sector 68, Specialty Clinic",
+      "line2": "Mohali, Punjab, India"
+    }
   },
-  // Pediatricians
   {
     "_id": "7",
-    "name": "Dr. David Patel",
+    "name": "Dr. Tushar Kumar",
     "speciality": "Pediatricians",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Patel",
-    "experience": "18+ years",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Tushar",
+    "experience": "14+ years",
     "degree": "MD, FAAP",
-    "about": "Dr. Patel is a highly-regarded pediatrician dedicated to the health and well-being of children from birth through adolescence. He has a friendly and gentle demeanor.",
-    "fees": 125
+    "about": "Dr. Tushar Kumar is a dedicated pediatrician providing top-tier healthcare for infants, toddlers, and teenagers.",
+    "fees": 550,
+    "address": {
+      "line1": "Phase 11, Children Hospital",
+      "line2": "Mohali, Punjab, India"
+    }
   },
   {
     "_id": "8",
-    "name": "Dr. Laura White",
+    "name": "Dr. Utkarsh Singh",
     "speciality": "Pediatricians",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+White",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Utkarsh",
     "experience": "10+ years",
     "degree": "MD",
-    "about": "Dr. White provides comprehensive care for infants, children, and adolescents. She believes in building a strong, trusting relationship with families.",
-    "fees": 115
+    "about": "Dr. Utkarsh Singh is known for his friendly approach with children and expertise in pediatric preventive health.",
+    "fees": 550,
+    "address": {
+      "line1": "Sector 67, Child Care Wing",
+      "line2": "Mohali, Punjab, India"
+    }
   },
-  // Neurologists
   {
     "_id": "9",
-    "name": "Dr. Emily White",
+    "name": "Dr. Swayam Kumar",
     "speciality": "Neurologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Emily+White",
-    "experience": "15+ years",
-    "degree": "MD, PhD",
-    "about": "Dr. Emily White is a highly respected neurologist, focusing on complex neurological disorders. She is dedicated to advancing the field through research and patient care.",
-    "fees": 200
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Swayam",
+    "experience": "16+ years",
+    "degree": "MD, DM",
+    "about": "Dr. Swayam Kumar is an expert neurologist specializing in stroke intervention, epilepsy, and brain health management.",
+    "fees": 1000,
+    "address": {
+      "line1": "Sector 69, Neuro Care Tower",
+      "line2": "Mohali, Punjab, India"
+    }
   },
   {
     "_id": "10",
-    "name": "Dr. James Wilson",
+    "name": "Dr. Sneh Prakash",
     "speciality": "Neurologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Wilson",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Sneh",
     "experience": "11+ years",
-    "degree": "MD",
-    "about": "Dr. Wilson specializes in treating headaches, epilepsy, and movement disorders. He is known for his detailed diagnostic skills and personalized treatment plans.",
-    "fees": 180
+    "degree": "MD, PhD",
+    "about": "Dr. Sneh Prakash specializes in neuro-rehabilitation, movement disorders, and advanced spine and brain diagnostics.",
+    "fees": 1000,
+    "address": {
+      "line1": "Phase 8B, Tech Zone",
+      "line2": "Mohali, Punjab, India"
+    }
   },
-  // Gastroenterologists
   {
     "_id": "11",
-    "name": "Dr. Kevin Chang",
+    "name": "Dr. Aftab Siddiqui",
     "speciality": "Gastroenterologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Chang",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Aftab",
     "experience": "14+ years",
-    "degree": "MD, AGAF",
-    "about": "Dr. Chang is a leading expert in digestive health, specializing in conditions like IBS, Crohn's disease, and preventative cancer screenings.",
-    "fees": 170
+    "degree": "MD, DM",
+    "about": "Dr. Aftab Siddiqui is a premier gastroenterologist expert in endoscopic procedures, liver care, and digestive health.",
+    "fees": 800,
+    "address": {
+      "line1": "Sector 71, Gastro Care",
+      "line2": "Mohali, Punjab, India"
+    }
   },
   {
     "_id": "12",
-    "name": "Dr. Susan Gupta",
+    "name": "Dr. Adeeb Ainul",
     "speciality": "Gastroenterologist",
-    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Gupta",
+    "image": "https://placehold.co/200x200/3b82f6/white?text=Dr.+Adeeb",
     "experience": "10+ years",
-    "degree": "MD",
-    "about": "Dr. Gupta focuses on liver diseases and general gastroenterology. She is a compassionate physician who prioritizes patient comfort and understanding.",
-    "fees": 165
+    "degree": "MD, AGAF",
+    "about": "Dr. Adeeb Ainul offers comprehensive diagnosis and modern treatment plans for stomach, intestinal, and liver health.",
+    "fees": 800,
+    "address": {
+      "line1": "Phase 9, Super Specialty Hospital",
+      "line2": "Mohali, Punjab, India"
+    }
   }
 ];
 
@@ -135,7 +177,7 @@ const doctors = [
 export const AppContext = createContext(null);
 
 const AppContextProvider = (props) => {
-    const currencySymbol = '$';
+    const currencySymbol = '₹';
     
     // --- THIS IS THE NEW, CORRECTED LOGIC ---
     // We keep your token logic
